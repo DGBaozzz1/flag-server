@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Xác thực</title></head><body>
+<h3>Nhập key xác thực</h3>
+<input id="key" placeholder="Nhập key"><br>
+<button onclick="submitKey()">Xác nhận</button>
+<p id="msg"></p>
+<script>
+async function submitKey(){
+  const key = document.getElementById("key").value.trim();
+  const ip = await (await fetch("https://api.ipify.org?format=json")).json();
+  const res = await fetch("/api/verify", {
+    method: "POST", headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ key, ip: ip.ip })
+  });
+  const data = await res.json();
+  document.getElementById("msg").innerText = data.msg || data.error;
+}
+</script>
+</body></html>
